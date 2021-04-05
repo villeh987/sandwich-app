@@ -1,0 +1,12 @@
+{
+    "name": "server_b",
+    "description": "server_b nodejs on Docker",
+    "author": "Vilhelmi Lehtonen <vilhelmi.lehtonen@tuni.fi>",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "amqplib": "0.5.3"
+    }
+}
