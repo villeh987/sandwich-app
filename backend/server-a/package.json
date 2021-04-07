@@ -4,8 +4,8 @@
   "description": "This is the Swagger 2.0 API for Web Architectures course group project work. ",
   "main": "index.js",
   "scripts": {
-	"prestart": "npm install",
-	"start": "node index.js"
+    "prestart": "npm install",
+    "start": "node index.js"
   },
   "keywords": [
     "swagger"
