@@ -28,6 +28,13 @@ services:
     build:
       dockerfile: Dockerfile
       context:  ./backend/server-a
+    # Volumes mounts our application code on the host to the /usr/src/app working directory on the container. 
+    # This way we can reuse our Docker images because when we make code changes in the host code, the changes will be updated in the container when running it again.
+    # the node_modules in the host doesn't affect the 
+    # this way node_modules is excluded so that it is always freshly downloaded from package.json or refreshed from the previously ran container cache
+    volumes:
+      - './backend/server-a:/usr/src/app'
+      - 'node_modules_server-a:/usr/src/app/node_modules'
     ports:
       - "5000:8080"
   server-b:
@@ -35,9 +42,18 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./backend/server-b
+    # Volumes mounts our application code on the host to the /usr/src/app working directory on the container. 
+    # This way we can reuse our Docker images because when we make code changes in the host code, the changes will be updated in the container when running it again.
+    # the node_modules in the host doesn't affect the 
+    # this way node_modules is excluded so that it is always freshly downloaded from package.json or refreshed from the previously ran container cache
+    volumes:
+      - './backend/server-b:/usr/src/app'
+      - 'node_modules_server-b:/usr/src/app/node_modules'
     ports: 
       - "8000:8080"
-
+volumes:
+  node_modules_server-a:
+  node_modules_server-b:
 
       #services:
         #client:
