@@ -2,12 +2,13 @@
 
 // Server b implementation
 
-const sendTask = require('./rabbit-utils/sendTask.js')
+//const sendTask = require('./rabbit-utils/sendTask.js')
 const receiveTask = require('./rabbit-utils/receiveTask.js')
 
 console.log("Running!")
 
 receiveTask.getTask('rapid-runner-rabbit', 'received-orders');
+//sendTask.addTask('rapid-runner-rabbit', 'completed-orders', 'order');
 
 
 

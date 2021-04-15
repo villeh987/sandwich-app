@@ -18,7 +18,7 @@ module.exports.getTask = function(rabbitHost, queueName){
       return ok;
 
       function doWork(msg) {
-        var body = order.content.toString();
+        var body = msg.content.toString();
         console.log(" [x] Received '%s'", body);
         var secs = body.split('.').length - 1;
         //console.log(" [x] Task takes %d seconds", secs);
