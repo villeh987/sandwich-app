@@ -27,7 +27,7 @@ services:
     image: group/server-a:3a
     depends_on:
       - rapid-runner-rabbit
-    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
+      command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
     build:
       dockerfile: Dockerfile
       context:  ./backend/server-a
@@ -42,6 +42,9 @@ services:
       - "5000:8080"
   server-b:
     image: group/server-b:3b
+    depends_on:
+      - rapid-runner-rabbit
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
     build:
       dockerfile: Dockerfile
       context: ./backend/server-b
@@ -63,17 +66,17 @@ services:
       expose:
         - 5672
         - 15672
-      networks:
-        - rabbitmq_node_net
+      #networks:
+      #  - rabbitmq_node_net
       volumes:
           - ./data:/var/lib/rabbitmq
           - ./data/logs:/var/log/rabbitmq
 
-      #hostname: rabbit
+      #hostname: rapid-runner-rabbit
 
-networks:
-  rabbitmq_node_net:
-    driver: bridge
+#networks:
+#  rabbitmq_node_net:
+#    driver: bridge
 
 volumes:
   node_modules_server-a:

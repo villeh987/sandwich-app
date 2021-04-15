@@ -5,11 +5,13 @@
 const sendTask = require('./rabbit-utils/sendTask.js')
 const receiveTask = require('./rabbit-utils/receiveTask.js')
 
-//receiveTask.getTask('rapid-runner-rabbit', 'received-orders');
-
 console.log("Running!")
 
+receiveTask.getTask('rapid-runner-rabbit', 'received-orders');
 
+
+
+/*
 // Test code that loops forever
 function logEvery2Seconds(i) {
     setTimeout(() => {
@@ -24,3 +26,5 @@ let i = 0;
 setInterval(() => {
     console.log('Infinite Loop Test interval n:', i++);
 }, 2000)
+
+*/
