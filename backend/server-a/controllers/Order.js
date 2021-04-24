@@ -2,20 +2,40 @@
 
 var utils = require('../utils/writer.js');
 var Order = require('../service/OrderService');
-const Order = require('../models/Order')
+var OrderModel = require('../models/order');
 
 var sendTask = require('../rabbit-utils/sendTask.js')
 var receiveTask = require('../rabbit-utils/receiveTask.js')
 
-var ID = function () {
-  // Math.random should be unique because of its seeding algorithm.
-  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-  // after the decimal.
-  return '_' + Math.random().toString(36).substr(2, 9);
-};
+
 
 module.exports.addOrder = function addOrder(req, res, next) {
   var order = req.swagger.params['order'].value;
+
+  var order_id = 7
+  console.log(order.data.sandwichId)
+  console.log(order.data.status)
+  console.log(order_id)
+
+  const orderData = {
+    id: order_id,
+    sandwichId: order.data.sandwichId,
+    status: order.data.status,
+    created: new Date()
+  }
+  OrderModel.create(orderData)
+
+  // only for debugging
+  OrderModel.findOne(
+    { id: order_id },
+    function (err, doc) {
+      if (err) { throw err; }
+      else {
+        console.log("found");
+        console.log(doc);
+      }
+    });
+
   Order.addOrder(order)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -25,14 +45,6 @@ module.exports.addOrder = function addOrder(req, res, next) {
       // Using only Docker didn't networking didn't work,
       // unless Docker's bridge network IPs, were used (172.20.0.X).
       sendTask.addTask("rapid-runner-rabbit", "received-orders", order);
-
-      const orderData = {
-        id: ID(),
-        sandwichId: req.body.sandwichId,
-        status: req.body.status,
-        created: new Date()
-      }
-      Order.create(orderData)
     })
     .catch(function (response) {
       utils.writeJson(res, response);

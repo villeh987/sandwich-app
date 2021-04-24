@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Order = new Schema({
+const OrderSchema = new Schema({
   id: {
     type: Number,
     required: true
@@ -21,4 +21,4 @@ const Order = new Schema({
   }
 });
 // export with the name of "order" so other JS files can read it
-module.exports = Order = mongoose.model('order', ItemSchema);
+module.exports = Order = mongoose.model('order', OrderSchema);

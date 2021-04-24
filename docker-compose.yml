@@ -27,22 +27,10 @@ services:
     image: group/server-a:3a
     depends_on:
       - rapid-runner-rabbit
-      - db
-    command: ["./utils/wait-for-it.sh", "db:27017", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
     build:
       dockerfile: Dockerfile
       context:  ./backend/server-a
-    # This tells Compose that we would like to add environment variables from a file called .env, located in our build context.
-    #env_file: .env
-    #environment:
-    #  - MONGO_USERNAME=$MONGO_USERNAME
-    #  - MONGO_PASSWORD=$MONGO_PASSWORD
-    #  - MONGO_HOSTNAME=db
-    #  - MONGO_PORT=$MONGO_PORT
-    #  - MONGO_DB=$MONGO_DB
-    # This specifies that our service will join the mongodb network.
-    networks:
-      - mongodb
     # Volumes mounts our application code on the host to the /usr/src/app working directory on the container. 
     # This way we can reuse our Docker images because when we make code changes in the host code, the changes will be updated in the container when running it again.
     # the node_modules in the host doesn't affect the 
@@ -52,6 +40,8 @@ services:
       - 'node_modules_server-a:/usr/src/app/node_modules'
     ports:
       - "5000:8080"
+    networks:
+      - test-network
   server-b:
     image: group/server-b:3b
     depends_on:
@@ -69,15 +59,19 @@ services:
       - 'node_modules_server-b:/usr/src/app/node_modules'
     ports: 
       - "8000:8080"
+    networks:
+      - test-network
 
   rapid-runner-rabbit:
       image: rabbitmq:3-management
       ports:
         - 5672:5672
         - 15672:15672
-      expose:
-        - 5672
-        - 15672
+      networks:
+        - test-network
+      #expose:
+      #  - 5672
+      #  - 15672
       #networks:
       #  - rabbitmq_node_net
       volumes:
@@ -85,26 +79,22 @@ services:
           - ./data/logs:/var/log/rabbitmq
       #hostname: rapid-runner-rabbit
 
-  db:
+  mongo:
     image: mongo:4.1.8-xenial
-    container_name: db
-    restart: unless-stopped
+    container_name: mongo
+    restart: always
     ports:
       - 27017:27017
-    expose:
-      - 27017
-    # dbdata will persist the data stored in Mongo’s default data directory, /data/db. 
-    # This will ensure that you don’t lose data in cases where you stop or remove containers.
+      #- "127.0.0.1:27017:27017"
     volumes:
-    - dbdata:/data/db
-    # This specifies that our service will join the mongodb network.
+      - dbdata:/data/db
     networks:
-      - mongodb
+      - test-network
+
+networks:
+  test-network:
 
 # Services' networks defined
-networks:
-  mongodb:
-    driver: bridge
 #  rabbitmq_node_net:
 #    driver: bridge
 
