@@ -13,11 +13,11 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
+    "amqplib": "0.5.3",
     "connect": "^3.2.0",
+    "cors": "^2.8.5",
     "js-yaml": "^3.3.0",
     "swagger-tools": "0.10.1",
-    "amqplib": "0.5.3",
-    "mongoose": "^5.12.4",
-    "cors": "^2.8.5"
+    "mongoose": "^5.12.4"
   }
 }
