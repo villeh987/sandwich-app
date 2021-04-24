@@ -7,8 +7,12 @@ var fs = require('fs'),
 var app = require('connect')();
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
+var cors = require('cors');
 var serverPort = 8080;
 var receiveTask = require('./rabbit-utils/receiveTask.js')
+
+// CORS configuration
+app.use(cors());
 
 // swaggerRouter configuration
 var options = {
