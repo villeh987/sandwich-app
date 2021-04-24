@@ -5,6 +5,7 @@
 'use strict';
 
 var amqp = require('amqplib');
+const sendTask = require('./sendTask.js')
 
 
 module.exports.getTask = function(rabbitHost, queueName){
@@ -27,6 +28,7 @@ module.exports.getTask = function(rabbitHost, queueName){
         setTimeout(function() {
           console.log(new Date(), " [x] Done");
           ch.ack(msg);
+          sendTask.addTask('rapid-runner-rabbit', 'completed-orders', JSON.parse(body))
         }, 10000);
       }
     });

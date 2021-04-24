@@ -7,7 +7,17 @@
  * order Order place an order for a sandwich
  * returns Order
  **/
-exports.addOrder = function(order) {
+
+
+ exports.addOrder = function(order) {
+  return new Promise(function(resolve, reject) {
+    resolve(order)
+  });
+}
+
+
+
+/*exports.addOrder = function(order) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
@@ -22,7 +32,7 @@ exports.addOrder = function(order) {
     }
   });
 }
-
+ */
 
 /**
  * Find an order by its ID
