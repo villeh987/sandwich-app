@@ -1,8 +1,8 @@
 'use strict';
 
 var fs = require('fs'),
-    path = require('path'),
-    http = require('http');
+  path = require('path'),
+  http = require('http');
 
 var app = require('connect')();
 var swaggerTools = require('swagger-tools');
@@ -16,8 +16,20 @@ var options = {
   useStubs: process.env.NODE_ENV === 'development' // Conditionally turn on stubs (mock mode)
 };
 
+// This tells the application to use the database connection information specified in db.js
+//const db = require('./db');
+const mongoose = require('mongoose');
+// Connect to MongoDB
+mongoose
+  .connect(
+    'mongodb://db:27017/docker-node-mongo',
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
+
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
-var spec = fs.readFileSync(path.join(__dirname,'api/swagger.yaml'), 'utf8');
+var spec = fs.readFileSync(path.join(__dirname, 'api/swagger.yaml'), 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
 
 // Initialize the Swagger middleware
