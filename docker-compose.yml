@@ -22,15 +22,27 @@ services:
     ports:
       - 3001:3000
     environment:
-      - CHOKIDAR_USEPOLLING=true  
+      - CHOKIDAR_USEPOLLING=true
   server-a:
     image: group/server-a:3a
     depends_on:
       - rapid-runner-rabbit
-    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
+      - db
+    command: ["./utils/wait-for-it.sh", "db:27017", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
     build:
       dockerfile: Dockerfile
       context:  ./backend/server-a
+    # This tells Compose that we would like to add environment variables from a file called .env, located in our build context.
+    #env_file: .env
+    #environment:
+    #  - MONGO_USERNAME=$MONGO_USERNAME
+    #  - MONGO_PASSWORD=$MONGO_PASSWORD
+    #  - MONGO_HOSTNAME=db
+    #  - MONGO_PORT=$MONGO_PORT
+    #  - MONGO_DB=$MONGO_DB
+    # This specifies that our service will join the mongodb network.
+    networks:
+      - mongodb
     # Volumes mounts our application code on the host to the /usr/src/app working directory on the container. 
     # This way we can reuse our Docker images because when we make code changes in the host code, the changes will be updated in the container when running it again.
     # the node_modules in the host doesn't affect the 
@@ -71,16 +83,46 @@ services:
       volumes:
           - ./data:/var/lib/rabbitmq
           - ./data/logs:/var/log/rabbitmq
-
       #hostname: rapid-runner-rabbit
 
-#networks:
+  db:
+    image: mongo:4.1.8-xenial
+    container_name: db
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+    # dbdata will persist the data stored in Mongo’s default data directory, /data/db. 
+    # This will ensure that you don’t lose data in cases where you stop or remove containers.
+    volumes:
+    - dbdata:/data/db
+    # This specifies that our service will join the mongodb network.
+    networks:
+      - mongodb
+
+# Services' networks defined
+networks:
+  mongodb:
+    driver: bridge
 #  rabbitmq_node_net:
 #    driver: bridge
 
 volumes:
+  dbdata:
   node_modules_server-a:
   node_modules_server-b:
+
+
+
+
+
+
+
+
+
+
+
 
       #services:
         #client:
