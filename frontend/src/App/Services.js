@@ -1,5 +1,21 @@
 import axios from 'axios'
 
+export const getOrder = (id) => {
+  const url = 'http://localhost:5000/v1/order/' + id;
+  return axios
+     .get(url, {
+       headers: {
+         'Accept': 'application/json',
+       }
+     })
+     .then((res) => {
+       return res;
+     })
+     .catch(function (error) {
+       console.log(error);
+     })
+}
+
 export const getOrders = () => {
    return axios
       .get('http://localhost:5000/v1/order', {
