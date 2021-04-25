@@ -3,22 +3,22 @@
 var utils = require('../utils/writer.js');
 var Order = require('../service/OrderService');
 var OrderModel = require('../models/order');
+var CounterModel = require('../models/counter');
 
 var sendTask = require('../rabbit-utils/sendTask.js')
 var receiveTask = require('../rabbit-utils/receiveTask.js')
 
-
-
 module.exports.addOrder = function addOrder(req, res, next) {
   var order = req.swagger.params['order'].value;
 
-  var order_id = 7
+  order.data.id = CounterModel.getNextSequence("order")
+
+  console.log(order.data.id)
   console.log(order.data.sandwichId)
   console.log(order.data.status)
-  console.log(order_id)
 
   const orderData = {
-    id: order_id,
+    id: order.data.id,
     sandwichId: order.data.sandwichId,
     status: order.data.status,
     created: new Date()
