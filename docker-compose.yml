@@ -27,7 +27,7 @@ services:
     image: group/server-a:3a
     depends_on:
       - rapid-runner-rabbit
-    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
     build:
       dockerfile: Dockerfile
       context:  ./backend/server-a

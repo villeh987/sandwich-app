@@ -23,12 +23,14 @@ module.exports.getTask = function(rabbitHost, queueName){
       function doWork(msg) {
         var body = msg.content.toString();
         console.log(" [x] Received '%s'", body);
-        var secs = body.split('.').length - 1;
-        //console.log(" [x] Task takes %d seconds", secs);
+
+        var content = JSON.parse(msg.content.toString())
+        content.data.status = "Ready"
+
         setTimeout(function() {
           console.log(new Date(), " [x] Done");
           ch.ack(msg);
-          sendTask.addTask('rapid-runner-rabbit', 'completed-orders', JSON.parse(body))
+          sendTask.addTask('rapid-runner-rabbit', 'completed-orders', content)
         }, 10000);
       }
     });
