@@ -19,7 +19,7 @@ module.exports.addTask = function (rabbitHost, queueName, order) {
                 OrderModel.findOneAndUpdate(
                   { id: order.data.id },
                   { $set: { status: "failed" } },
-                  { upsert: true, useFindAndModify: false }, function (err, doc) {
+                  { new: true, upsert: true, useFindAndModify: false }, function (err, doc) {
                     if (err) { throw err; }
                     else {
                       console.log("status updated to 'failed'");
@@ -30,10 +30,13 @@ module.exports.addTask = function (rabbitHost, queueName, order) {
                 OrderModel.findOneAndUpdate(
                   { id: order.data.id },
                   { $set: { status: "inQueue" } },
-                  { upsert: true, useFindAndModify: false }, function (err, doc) {
+                  { new: true, upsert: true, useFindAndModify: false }, function (err, doc) {
                     if (err) { throw err; }
                     else {
+                      console.log("------------------------------------------------------");
                       console.log("status updated to 'inQueue'");
+                      console.log(doc);
+                      console.log("------------------------------------------------------");
                     }
                   });
               }

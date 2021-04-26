@@ -86,8 +86,8 @@ services:
     ports:
       - 27017:27017
       #- "127.0.0.1:27017:27017"
-    volumes:
-      - dbdata:/data/db
+    #volumes:
+    #  - dbdata:/data/db
     networks:
       - test-network
 
@@ -99,7 +99,7 @@ networks:
 #    driver: bridge
 
 volumes:
-  dbdata:
+  #dbdata:
   node_modules_server-a:
   node_modules_server-b:
 

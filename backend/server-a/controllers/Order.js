@@ -4,51 +4,43 @@ var utils = require('../utils/writer.js');
 var Order = require('../service/OrderService');
 var OrderModel = require('../models/order');
 var CounterModel = require('../models/counter');
-
 var sendTask = require('../rabbit-utils/sendTask.js')
 var receiveTask = require('../rabbit-utils/receiveTask.js')
 
 module.exports.addOrder = function addOrder(req, res, next) {
   var order = req.swagger.params['order'].value;
+  var query = {},
+    update = { _id: "order", $inc: { counter: 1 } },
+    options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
-  order.data.id = CounterModel.getNextSequence("order")
+  // Increases counter variable by 1 in the CounterModel and returns the value and which is the new order id
+  CounterModel.findOneAndUpdate(query, update, options, function (error, result) {
+    if (error) return;
 
-  console.log(order.data.id)
-  console.log(order.data.sandwichId)
-  console.log(order.data.status)
+    const NEW_ORDER_ID = result.counter
+    order.data.id = NEW_ORDER_ID
 
-  const orderData = {
-    id: order.data.id,
-    sandwichId: order.data.sandwichId,
-    status: order.data.status,
-    created: new Date()
-  }
-  OrderModel.create(orderData)
+    const orderData = {
+      id: order.data.id,
+      sandwichId: order.data.sandwichId,
+      status: order.data.status,
+    }
+    OrderModel.create(orderData)
 
-  // only for debugging
-  OrderModel.findOne(
-    { id: order_id },
-    function (err, doc) {
-      if (err) { throw err; }
-      else {
-        console.log("found");
-        console.log(doc);
-      }
-    });
-
-  Order.addOrder(order)
-    .then(function (response) {
-      utils.writeJson(res, response);
-      console.log(order)
-      // Let's add the order to a queue
-      // Notice: "rapid-runner-rabbit" is the name of the Docker Compose service
-      // Using only Docker didn't networking didn't work,
-      // unless Docker's bridge network IPs, were used (172.20.0.X).
-      sendTask.addTask("rapid-runner-rabbit", "received-orders", order);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
+    Order.addOrder(order)
+      .then(function (response) {
+        utils.writeJson(res, response);
+        console.log(order)
+        // Let's add the order to a queue
+        // Notice: "rapid-runner-rabbit" is the name of the Docker Compose service
+        // Using only Docker didn't networking didn't work,
+        // unless Docker's bridge network IPs, were used (172.20.0.X).
+        sendTask.addTask("rapid-runner-rabbit", "received-orders", order);
+      })
+      .catch(function (response) {
+        utils.writeJson(res, response);
+      });
+  })
 };
 
 module.exports.getOrderById = function getOrderById(req, res, next) {
