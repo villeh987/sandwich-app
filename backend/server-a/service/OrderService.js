@@ -44,10 +44,12 @@ exports.addOrder = function (order) {
  **/
 exports.getOrderById = function (orderId) {
   return new Promise(function (resolve, reject) {
-    OrderModel.find(orderId).select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
-      console.log("-----------------------getOrders------------------------");
+    OrderModel.findOne({
+      id: orderId
+    }).select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
+      console.log("-----------------------getOrderById------------------------");
       console.log(JSON.stringify(documents, null, 2));
-      console.log("-----------------------getOrders------------------------");
+      console.log("-----------------------getOrderById------------------------");
       //return res.end(JSON.stringify(users));
       var orders = {}
       orders['application/json'] = JSON.stringify(documents)
