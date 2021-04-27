@@ -45,6 +45,8 @@ module.exports.addOrder = function addOrder(req, res, next) {
 
 module.exports.getOrderById = function getOrderById(req, res, next) {
   var orderId = req.swagger.params['orderId'].value;
+
+
   Order.getOrderById(orderId)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -55,6 +57,12 @@ module.exports.getOrderById = function getOrderById(req, res, next) {
 };
 
 module.exports.getOrders = function getOrders(req, res, next) {
+  /*   OrderModel.find().select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, orders) {
+      console.log("-----------------------getOrders------------------------");
+      console.log(JSON.stringify(orders, null, 2));
+      console.log("-----------------------getOrders------------------------");
+      //return res.end(JSON.stringify(users));
+    }) */
   Order.getOrders()
     .then(function (response) {
       utils.writeJson(res, response);
