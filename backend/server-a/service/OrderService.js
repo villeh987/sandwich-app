@@ -1,4 +1,5 @@
 'use strict';
+var OrderModel = require('../models/order');
 
 
 /**
@@ -9,8 +10,8 @@
  **/
 
 
- exports.addOrder = function(order) {
-  return new Promise(function(resolve, reject) {
+exports.addOrder = function (order) {
+  return new Promise(function (resolve, reject) {
     resolve(order)
   });
 }
@@ -41,19 +42,21 @@
  * orderId Long ID of the order that needs to be fetched
  * returns Order
  **/
-exports.getOrderById = function(orderId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "sandwichId" : 6,
-  "id" : 0,
-  "status" : "ordered"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.getOrderById = function (orderId) {
+  return new Promise(function (resolve, reject) {
+    OrderModel.find(orderId).select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
+      console.log("-----------------------getOrders------------------------");
+      console.log(JSON.stringify(documents, null, 2));
+      console.log("-----------------------getOrders------------------------");
+      //return res.end(JSON.stringify(users));
+      var orders = {}
+      orders['application/json'] = JSON.stringify(documents)
+      if (Object.keys(orders).length > 0) {
+        resolve(orders[Object.keys(orders)[0]]);
+      } else {
+        resolve();
+      }
+    })
   });
 }
 
@@ -63,46 +66,21 @@ exports.getOrderById = function(orderId) {
  *
  * returns ArrayOfOrders
  **/
-exports.getOrders = function() {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [
-      {
-      "sandwichId" : 6,
-      "id" : 0,
-      "status" : "ordered"
-      },
-      {
-      "sandwichId" : 85,
-      "id" : 2,
-      "status" : "recieved"
-      },
-      {
-      "sandwichId" : 45,
-      "id" : 777,
-      "status" : "inQueue"
-      },
-      {
-      "sandwichId" : 92,
-      "id" : 12,
-      "status" : "ready"
-      },
-      {
-      "sandwichId" : 5,
-      "id" : 443,
-      "status" : "failed"
-      },
-      {
-      "sandwichId" : 65,
-      "id" : 434,
-      "status" : "wrongParam"
-      },
-    ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.getOrders = function () {
+  return new Promise(function (resolve, reject) {
+    OrderModel.find().select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
+      console.log("-----------------------getOrders------------------------");
+      console.log(JSON.stringify(documents, null, 2));
+      console.log("-----------------------getOrders------------------------");
+      //return res.end(JSON.stringify(users));
+      var orders = {}
+      orders['application/json'] = JSON.stringify(documents)
+      if (Object.keys(orders).length > 0) {
+        resolve(orders[Object.keys(orders)[0]]);
+      } else {
+        resolve();
+      }
+    })
   });
 }
 

@@ -63,21 +63,21 @@ services:
       - test-network
 
   rapid-runner-rabbit:
-      image: rabbitmq:3-management
-      ports:
-        - 5672:5672
-        - 15672:15672
-      networks:
-        - test-network
-      #expose:
-      #  - 5672
-      #  - 15672
-      #networks:
-      #  - rabbitmq_node_net
-      volumes:
-          - ./data:/var/lib/rabbitmq
-          - ./data/logs:/var/log/rabbitmq
-      #hostname: rapid-runner-rabbit
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - test-network
+    #expose:
+    #  - 5672
+    #  - 15672
+    #networks:
+    #  - rabbitmq_node_net
+    volumes:
+        - ./data:/var/lib/rabbitmq
+        - ./data/logs:/var/log/rabbitmq
+    #hostname: rapid-runner-rabbit
 
   mongo:
     image: mongo:4.1.8-xenial
@@ -86,8 +86,8 @@ services:
     ports:
       - 27017:27017
       #- "127.0.0.1:27017:27017"
-    volumes:
-      - dbdata:/data/db
+    #volumes:
+    #  - dbdata:/data/db
     networks:
       - test-network
 
@@ -99,7 +99,7 @@ networks:
 #    driver: bridge
 
 volumes:
-  dbdata:
+  #dbdata:
   node_modules_server-a:
   node_modules_server-b:
 

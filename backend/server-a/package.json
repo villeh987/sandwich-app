@@ -17,7 +17,7 @@
     "connect": "^3.2.0",
     "cors": "^2.8.5",
     "js-yaml": "^3.3.0",
-    "swagger-tools": "0.10.1",
-    "mongoose": "^5.12.4"
+    "mongoose": "^5.12.4",
+    "swagger-tools": "0.10.1"
   }
 }

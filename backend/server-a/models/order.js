@@ -15,10 +15,6 @@ const OrderSchema = new Schema({
     enum: ['ordered', 'received', 'inQueue', 'ready', 'failed'],
     default: 'failed'
   },
-  date: {
-    type: Date,
-    default: Date.now
-  }
 });
 // export with the name of "order" so other JS files can read it
 module.exports = Order = mongoose.model('order', OrderSchema);
