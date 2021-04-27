@@ -25,14 +25,6 @@ module.exports.getTask = function (rabbitHost, queueName) {
         var secs = body.split('.').length - 1;
         //console.log(" [x] Task takes %d seconds", secs);
 
-        /*         var condition = { id: content.data.id };
-                var doc = { $set: { status: "ready" } };
-                OrderModel.findOneAndUpdate(condition, doc, { upsert: true }, function (err, doc) {
-                  if (err) {
-                    console.log(err);
-                  }
-                }); */
-
         OrderModel.findOneAndUpdate(
           { id: content.data.id },
           { $set: { status: "ready" } },
@@ -43,7 +35,6 @@ module.exports.getTask = function (rabbitHost, queueName) {
               console.log("status updated to 'ready'");
               console.log(doc);
               console.log("------------------------------------------------------");
-
             }
           });
         ch.ack(msg);

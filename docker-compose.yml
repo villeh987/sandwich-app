@@ -12,6 +12,7 @@ version: "3"
 
 services:
   client:
+    container_name: client
     image: group/client:3c
     build: 
       dockerfile: Dockerfile
@@ -24,6 +25,7 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
   server-a:
+    container_name: server-a
     image: group/server-a:3a
     depends_on:
       - rapid-runner-rabbit
@@ -43,6 +45,7 @@ services:
     networks:
       - test-network
   server-b:
+    container_name: server-b
     image: group/server-b:3b
     depends_on:
       - rapid-runner-rabbit
@@ -63,6 +66,7 @@ services:
       - test-network
 
   rapid-runner-rabbit:
+    container_name: rabbit
     image: rabbitmq:3-management
     ports:
       - 5672:5672
