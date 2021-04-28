@@ -10,10 +10,8 @@ module.exports.addOrder = function addOrder(req, res, next) {
     .then(function (response) {
       utils.writeJson(res, response);
       console.log(order)
-      // Let's add the order to a queue
-      // Notice: "rapid-runner-rabbit" is the name of the Docker Compose service
-      // Using only Docker didn't networking didn't work,
-      // unless Docker's bridge network IPs, were used (172.20.0.X).
+
+      // Add the order to a queue
       sendTask.addTask("rapid-runner-rabbit", "received-orders", order);
     })
     .catch(function (response) {
