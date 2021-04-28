@@ -1,12 +1,4 @@
-# This is the docker-compose-yml file that must be able to start
-# your group's backend.
-
-
-# Remember to comment this file well!
-
-# After you have Docker and Docker Compose installed,
-# and this file is ready, you use this file and run it with:
-# `docker-compose up --build`
+# This is the docker-compose-yml file that starts the project
 
 version: "3"
 
@@ -16,32 +8,20 @@ services:
     build: 
       dockerfile: Dockerfile.prod
       context: ./frontend/
-    #volumes:
-    #  - './frontend/:/app/'
-    #  - '/app/node_modules' 
     ports:
-      - 1337:80
-    #environment:
-    #  - CHOKIDAR_USEPOLLING=true
+      - 3001:80
   server-a:
     image: group/server-a:3a
     depends_on:
       - rapid-runner-rabbit
+    # Wait for RabbitMQ to be ready before sever-a connects to it
     command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
     build:
       dockerfile: Dockerfile
       context:  ./backend/server-a
-    # Volumes mounts our application code on the host to the /usr/src/app working directory on the container. 
-    # This way we can reuse our Docker images because when we make code changes in the host code, the changes will be updated in the container when running it again.
-    # the node_modules in the host doesn't affect the 
-    # this way node_modules is excluded so that it is always freshly downloaded from package.json or refreshed from the previously ran container cache
-    volumes:
-      - './backend/server-a:/usr/src/app'
-      - 'node_modules_server-a:/usr/src/app/node_modules'
     ports:
       - "5000:8080"
-    networks:
-      - test-network
+
   server-b:
     image: group/server-b:3b
     depends_on:
@@ -50,34 +30,14 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./backend/server-b
-    # Volumes mounts our application code on the host to the /usr/src/app working directory on the container. 
-    # This way we can reuse our Docker images because when we make code changes in the host code, the changes will be updated in the container when running it again.
-    # the node_modules in the host doesn't affect the 
-    # this way node_modules is excluded so that it is always freshly downloaded from package.json or refreshed from the previously ran container cache
-    volumes:
-      - './backend/server-b:/usr/src/app'
-      - 'node_modules_server-b:/usr/src/app/node_modules'
     ports: 
       - "8000:8080"
-    networks:
-      - test-network
 
   rapid-runner-rabbit:
       image: rabbitmq:3-management
       ports:
         - 5672:5672
         - 15672:15672
-      networks:
-        - test-network
-      #expose:
-      #  - 5672
-      #  - 15672
-      #networks:
-      #  - rabbitmq_node_net
-      volumes:
-          - ./data:/var/lib/rabbitmq
-          - ./data/logs:/var/log/rabbitmq
-      #hostname: rapid-runner-rabbit
 
   mongo:
     image: mongo:4.1.8-xenial
@@ -85,126 +45,3 @@ services:
     restart: always
     ports:
       - 27017:27017
-      #- "127.0.0.1:27017:27017"
-    volumes:
-      - dbdata:/data/db
-    networks:
-      - test-network
-
-networks:
-  test-network:
-
-# Services' networks defined
-#  rabbitmq_node_net:
-#    driver: bridge
-
-volumes:
-  dbdata:
-  node_modules_server-a:
-  node_modules_server-b:
-
-
-
-
-
-
-
-
-
-
-
-
-      #services:
-        #client:
-          #image: group/client:3c
-          #build: 
-            #dockerfile: Dockerfile
-            #context: ./frontend/
-          #volumes:
-            #- './frontend/:/app/'
-            #- '/app/node_modules' 
-          #ports:
-            #- 3001:3000
-          #environment:
-            #- CHOKIDAR_USEPOLLING=true  
-          
-        # An example configuration of server A for groups' convenience.
-        # server-a is based on the Docker image the groups produce and build themselves.
-        #server-a:
-          # Change the image information to match your server A image
-          #image: group/server-a:3a
-          # $USERNAME/$IMAGENAME:$TAG, something like group000/node-swagger:3a
-          # 'depends_on' and 'command' are  to be used when used
-          # with RabbitMQ service in this file. 'depends_on' must be set
-          # to RabbitMQ service's name from this file, and 'command'
-          # can be modified to be anything, but what is given should
-          # work. Just uncomment them
-          # depends_on:
-          #   -  rapid-runner-rabbit
-          # command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
-          #build:
-            #dockerfile: Dockerfile
-            #context:  ./backend/server-a
-          # Here we map the port 8080 of the container to the
-          # port 12345 of the host. Container port has been exposed
-          # in the node:10 Docker Hub Dockerfile.
-          #ports:
-            #- "5000:8080"
-          #networks:
-          #  - backend
-      
-        # You can base this service on the rabbitmq:3-management Docker Hub image.
-        # You need to expose the RabbitMQ port 5672 to other containers
-        # in this  docker-compose.yml, and for the managent from a Web
-        # server you needs to make the map the RabbitMQ container port
-        # 15672 to host port you wish to use for this.
-        # A set of needed Docker instructions like 'image:' are shown
-        # below, groups should set their values. Groups are free to
-        # CRUD the set of instructions as they see fit.
-        # rapid-runner-rabbit:
-        #   image: rabbitmq:3-management
-        #   ports:
-        #   expose:
-        #   networks:
-      
-
-
-        # much of the server-b service entry can be copied from server-a
-        # service above. server-b directory Dockerfile has more
-        # information.
-        # A set of needed Docker instructions like 'image:' are shown
-        # below, groups should set their values. Groups are free to
-        # CRUD this set of instructions as they see fit.
-        #server-b:
-          #image: group/server-b:3b
-          # depends_on:
-          # command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
-          #build:
-            #dockerfile: Dockerfile
-            #context: ./backend/server-b
-          #ports: 
-            #- "8000:8080"
-          #expose:
-          #networks: 
-      
-        # Your group might want to use a database to store some data
-        # You can use any database you wish, PostgreSQL, MySQL and
-        # MongoDB have rather good Docker documentation and examples.
-        # But some groups could find a way to do this without
-        # databases (but I could not :-) )
-        # database-service would go here.
-        #database:
-      
-      # Here we create a named network, that all the backend components
-      # must be added to for them to be able to communicate through
-      # exposed ports.
-      #networks:
-        #backend:
-      
-      # If you use databases for storing information, you can define
-      # their volumes here.
-      # Documentation: https://docs.docker.com/storage/volumes/
-      # Personally I like to look at the database's image's Dockerfile
-      # in the Docker Hub to see what directory it uses to store data.
-      # volumes:
-      
