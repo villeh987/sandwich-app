@@ -1,0 +1,47 @@
+# This is the docker-compose-yml file that starts the project
+
+version: "3"
+
+services:
+  client:
+    image: group/client:3c
+    build: 
+      dockerfile: Dockerfile.prod
+      context: ./frontend/
+    ports:
+      - 3001:80
+  server-a:
+    image: group/server-a:3a
+    depends_on:
+      - rapid-runner-rabbit
+    # Wait for RabbitMQ to be ready before sever-a connects to it
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
+    build:
+      dockerfile: Dockerfile
+      context:  ./backend/server-a
+    ports:
+      - "5000:8080"
+
+  server-b:
+    image: group/server-b:3b
+    depends_on:
+      - rapid-runner-rabbit
+    command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--timeout=60", "--",  "npm", "start"]
+    build:
+      dockerfile: Dockerfile
+      context: ./backend/server-b
+    ports: 
+      - "8000:8080"
+
+  rapid-runner-rabbit:
+      image: rabbitmq:3-management
+      ports:
+        - 5672:5672
+        - 15672:15672
+
+  mongo:
+    image: mongo:4.1.8-xenial
+    container_name: mongo
+    restart: always
+    ports:
+      - 27017:27017
