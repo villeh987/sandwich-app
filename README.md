@@ -2,9 +2,12 @@
 
  
 ### Required documentation
+````
+OLD
 The documentation required includes the project plan, architectural description of the system, the technologies used, the progress of the group's work, as well as what the group's members learned during this project. Groups also must document where the components of their system are placed in the repository, and how the course personnel can deploy the group's system on their own computers when testing it.
 
 Groups can of course add any extra documentation they feel is useful, and if course personnel finds the documentation useful and well written, this extra documentation will affect the points positively.
+````
 
 ### Project plan
 
@@ -37,8 +40,8 @@ Initial timetable:
 - Week 12: Start of the project. Repositories created.
 - Week 13: Working on other projects and also dayjobs.
 - Week 14: Creating initial files and branches for the components. Setting up environments. Mid-project check-in
-- Week 15:
-- Week 16:
+- Week 15: Devceloping server-a, server-b, client, and rabbitmq.
+- Week 16: Implementing database, styling the frontend. Starting documentation.
 - Week 17: Implementing voluntary parts if enough time. Decorating the frontend. Cleaning up code. Finishing documentation. 
 
 
@@ -72,6 +75,7 @@ The entire project is deployed using Docker and specifically docker-compose. Cli
 double T and V
 │   README.md
 │   docker-compose.yml  # Used by docker-compose to run the multi-container project
+|   docker-compose.prod.yml # Production version
 │
 └───backend
 │   └───rabbitmq  # Empty folder. RabbitMQ is run from a ready-made image
@@ -87,6 +91,7 @@ double T and V
 |   |   |   |   User.js      # NOT IMPLEMENTED
 |   |   |   
 |   |   └───models
+|   |   |   |   counter.js # tracks the newest order ID
 |   |   |   |   order.js  # Database model for a sandwich order
 |   |   |   
 |   |   └───rabbit-utils
@@ -128,14 +133,17 @@ double T and V
 └───frontend
 |   └───public  # Static files
 |   └───src     # Application code
-|   |   └───App 
+|   |   └───components 
 |   |   |   |   Services.js  # Requests to server-a
-|   |   |   |   index.js     # Main App component
-|   |   |   |   style.css    # App styles
+|   |   |   |   Landing.js # Functionality 
+|   |   |   |   style.css    
 |   |   |
+|   |   |   App.css # App styles
+|   |   |   App.js  # Main App component
 |   |   |   index.js  # Client start point
 |   |   |  
 |   │   Dockerfile # Defines client docker container and commands.
+|   │   Dockerfile.prod # Production version container 
 |   |   README.md
 |   │   package-lock.json
 |   |   package.json
@@ -158,6 +166,7 @@ It is important to evaluate the architecture and compare it other possible archi
 - AMQP: Advanced Message Queuing Protocol. Application layer protocol for communicating with the RabbitMQ. The protocol is client agnostic meaning that any client can be used with the protocol.
 - Swagger: API development and documentation tool. It uses OpenAPI specification, which creates a RESTful interface for developing and consuming an API.
 - MongoDB: Is a NoSQL database that uses JSON-like documents.
+- Mongoose: ODM library for MongoDB
 - Docker (docker-compose): A tool for defining and running multi-container Docker applications.
 
 For the frontend, we decided to go with the recommended option. We all have previous with React and could have also gone with some other option such as Angular.js or Vue.js. However, we decided not to do so due to course recommendation and for our convinience.
@@ -174,18 +183,40 @@ ORIGINAL
 Description of the technologies used in the system (Node, RabbitMQ, AMPQ, ...), how the technologies were used in the project, and the group's view of the technologies from your use. Could other/better alternatives have been used? Or is there an alternative that would have been more interesting to the group?
 ````
 
-#### How the produced system can be tested
-Here group describes how course personnel can test their system. A complete HOWTO on running your system, with easily copy-pastable examples.
+### How the produced system can be tested
+**NOTE** : This project has been tested using Docker version 20.10 and docker-compose version 1.29.0. Please use Docker this version, or other version that supports multi-stage builds.
 
-### Learnign during the project
-A group learning diary, here group's members note down the learning during the project. Short descriptions of who, what, and when is sufficient. What could be a link to GitLab Issue, that has more information.
+1. To check Docker and compose version:
+
+```python
+docker --version
+docker-compose --version
+```
+
+2. Clone or download the project at: 
+https://course-gitlab.tuni.fi/webarch-2021/double-t-and-v
+
+3. Navigate to the project folder and run the project with:
+
+```
+cd double-t-and-v
+docker-compose -f docker-compose.prod.yml up
+```
+
+4. Starting the project will take some time. The client will start on port 3001. All ports are visible in the docker-compose.prod.yml file. These ports have to be free in order for the project to work.
+
+### Learning during the project
+````
+OLD: A group learning diary, here group's members note down the learning during the project. Short descriptions of who, what, and when is sufficient. What could be a link to GitLab Issue, that has more information.
 
 This information is interesting to the course personnel, too. We get to see if the project enabled learning as designed.
+
+````
 
 Tommi M:
 
 Tommi B: In the start of the project I learned a lot about Docker and Docker Compose, even though I didn't do as much with them as the rest of the group. In the rest of the project I learned a lot about React as I was mainly working with the frontend, but while helping Tommi M with the server A, I learned a lot about Swagger module and Node. I also got to deepen my knowledge about Swagger API documentation and CORS.
 
-Vilhelmi:
+Vilhelmi: Working with Docker during this project has significantly imporved my understanding of it and docker-compose. The relationships with the services and Dockerfiles are much cleare than before. I believe that this project has helped me to dockerize future coding projects. RabbitMQ was completely new to me and the group. Investigating that has helped to understand a bit about message brokers and AMQP-protocol. 
 
 
