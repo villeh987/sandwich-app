@@ -25,7 +25,7 @@ By looking into the project description we realized, that implementing the manda
 After dividing the project into sensible chunks, we discussed our roles in the project. Below are the main responsibilities and hours to be committed for the project. Naturally these responsibilities mixed up during the project, as someone was done with a feature and could help out with another one. The biggest workload in our mind was the frontend so Tommi B would focus mainly on that. All members are familiar with React and would help out when needed.
 
 * Tommi M (6h/week): Server A, docker-compose, and database
-* Tommi B (6h/week): Frontend
+* Tommi B (6h/week): Frontend, helping hand in Server A
 * Vilhelmi (6h/week): server-b, RabbitMQ, documentation
 
 For version control, it was decided that each Gitlab task would be implemented more or less in separate feature branches. The idea was that when the feature would be finished, the ticket would be closed and the feature merged into develop branch. The purpose of this was to keep the dev branch as a functioning test branch and to avoid merge conflicts. This procedure was followed quite loosely as some featured would be required by others and would be merged when needed. There was big dependancy between components.
@@ -184,7 +184,7 @@ This information is interesting to the course personnel, too. We get to see if t
 
 Tommi M:
 
-Tommi B:
+Tommi B: In the start of the project I learned a lot about Docker and Docker Compose, even though I didn't do as much with them as the rest of the group. In the rest of the project I learned a lot about React as I was mainly working with the frontend, but while helping Tommi M with the server A, I learned a lot about Swagger module and Node. I also got to deepen my knowledge about Swagger API documentation and CORS.
 
 Vilhelmi:
 
