@@ -12,7 +12,7 @@ export const getOrder = (id) => {
        return res;
      })
      .catch(function (error) {
-       console.log(error);
+       return error.response.status;
      })
 }
 

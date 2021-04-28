@@ -32,24 +32,35 @@ class Landing extends Component {
       var parsedValue = this.state.searchValue.replace(/[^0-9]/g, '');
       if (parsedValue === '' || isNaN(parseInt(parsedValue))) {
          this.setState({ searchStatus: "The order ID should be a positive number. Please try again." });
-         this.setState({ searchValue: "" });
          this.setState({ searchResult: [] })
       } else {
          getOrder(parsedValue)
             .then(res => {
-               // Act based on the status code of the response
-               if (res.status === 200) {
-                  this.setState({ searchResult: res.data })
-                  this.setState({ searchStatus: "Order found with the given ID!" });
-               } else if (res.status === 400) {
-                  this.setState({ searchResult: [] })
-                  this.setState({ searchStatus: "The order ID should be a positive number. Please try again." });
-               } else if (res.status === 404) {
-                  this.setState({ searchResult: [] })
-                  this.setState({ searchStatus: "No sandwiches found with the given ID." });
+               // If the response was error, Services.js returns only the error code
+               if (typeof res === "number") {
+                  // Order was not found with the given id
+                  if (res === 404) {
+                     this.setState({ searchResult: [] })
+                     this.setState({ searchStatus: "No orders found with the given ID!" });
+                  // Order ID somehow wasn't a positive number, even though frontend shouldn't send those
+                  } else if (res === 400) {
+                     this.setState({ searchResult: [] })
+                     this.setState({ searchStatus: "The order ID should be a positive number. Please try again." });
+                  } else {
+                     this.setState({ searchResult: [] })
+                     this.setState({ searchStatus: "Something went wrong, please try again!" });
+                  }
+               // If the response was something else than a number, and order should have been found
                } else {
-                  this.setState({ searchResult: [] })
-                  this.setState({ searchStatus: "Something went wrong, please try again!" });
+                  // Order was found, save its data to state
+                  if (res.status === 200) {
+                     this.setState({ searchResult: res.data })
+                     this.setState({ searchStatus: "Order found with the given ID!" });
+                  // Something very weird has happened, as the code should not be able to be other than 200, 400 or 404
+                  } else {
+                     this.setState({ searchResult: [] })
+                     this.setState({ searchStatus: "Something went wrong, please try again!" });
+                  }
                }
             })
       }
@@ -60,7 +71,6 @@ class Landing extends Component {
    fetchOrders() {
       getOrders()
          .then(data => {
-            console.log(data);
             this.setState({ orders: data })
          })
    }
@@ -88,12 +98,21 @@ class Landing extends Component {
    render() {
       // Create the search result if there is data for it in state
       var searchResult = "";
-      if (this.state.searchResult !== null && this.state.searchResult.length !== 0) {
-         searchResult = "ID: " + this.state.searchResult.id + " - Status: " + this.state.searchResult.status + " - Sandwich ID: " +  this.state.searchResult.status;
+      if (this.state.searchResult !== null && this.state.searchResult.id !== undefined) {
+         searchResult = "ID: " + this.state.searchResult.id + " - Status: " + this.state.searchResult.status + " - Sandwich ID: " +  this.state.searchResult.sandwichID;
       }
+
+      // Create the list of orders it there is data for it in state
+      var orderList = []
+      if (this.state.orders !== null && this.state.orders.length > 0) {
+         orderList = (this.state.orders).map(function(item, index) {
+            return <li key={ index }>ID: {item.id} - Status: {item.status} - Sandwich ID: {item.sandwichId}</li>;
+         });
+      }
+
       return (
          <div className="cards">
-            <section class="card card--order">
+            <section className="card card--order">
                <header>
                   <h1 className="text-center">Sandwich ordering</h1>
                </header>
@@ -112,16 +131,14 @@ class Landing extends Component {
                   </div>
                </div>
             </section>
-            <section class="card card--orderList">
+            <section className="card card--orderList">
                <header>
                   <h1 className="text-center">Order history</h1>
                </header>
                <button className="btn btn-dark" onClick={this.fetchOrders}>Update orders</button>
                <div className="multipleOrdersContainer">
                   <ul>
-                     {(this.state.orders).map(function(item, index){
-                        return <li key={ index }>ID: {item.id} - Status: {item.status} - Sandwich ID: {item.sandwichId}</li>;
-                     })}
+                     {orderList}
                   </ul>
                </div>
             </section>

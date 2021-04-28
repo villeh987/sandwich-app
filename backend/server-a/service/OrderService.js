@@ -1,6 +1,7 @@
 'use strict';
 var Order = require('../models/order');
 var CounterModel = require('../models/counter');
+var utils = require('../utils/writer.js');
 
 /**
  * Add an order for an sandwich
@@ -46,16 +47,19 @@ exports.addOrder = function (order) {
  **/
 exports.getOrderById = function (orderId) {
   return new Promise(function (resolve, reject) {
+    /* if (!Number.isInteger(order)) {
+      resolve(utils.respondWithCode(400));
+    } */
     var orders = {}
     // fetches the order from the db with only the necessary fields
     Order.findOne({
       id: orderId
     }).select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
-      orders['application/json'] = JSON.stringify(documents)
-      if (Object.keys(orders).length > 0) {
-        resolve(orders[Object.keys(orders)[0]]);
+      if (documents) {
+        orders['application/json'] = JSON.stringify(documents)
+        resolve(utils.respondWithCode(200, orders[Object.keys(orders)[0]]));
       } else {
-        resolve();
+        resolve(utils.respondWithCode(404));
       }
     })
   });
