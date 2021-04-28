@@ -18,6 +18,8 @@
     "cors": "^2.8.5",
     "js-yaml": "^3.3.0",
     "mongoose": "^5.12.4",
+    "jsonwebtoken": "^8.5.1",
+    "bcrypt": "^5.0.1",
     "swagger-tools": "0.10.1"
   }
 }

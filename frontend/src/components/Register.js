@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { register } from './UserFunctions'
-import axios from 'axios'
 
 
 class Register extends Component {
@@ -8,6 +7,7 @@ class Register extends Component {
       super()
       this.state = {
          username: '',
+         email: '',
          password: '',
          error: ''
       }
@@ -23,7 +23,6 @@ class Register extends Component {
    onSubmit(e) {
       // prevents the page from realoading when the submit button is clicked
       e.preventDefault()
-
       if (this.state.username === '' || this.state.password === '') {
          this.setState({ error: 'field cannot be blank' })
          return;
@@ -31,20 +30,29 @@ class Register extends Component {
 
       const newUser = {
          username: this.state.username,
+         email: this.state.email,
          password: this.state.password
       }
-
+      console.log(newUser);
       register(newUser).then(status => {
          if (status === 'success') {
             this.props.history.push(`/login`)
+            this.setState({ error: "User created" })
          } else {
             this.setState({ error: status })
          }
       })
    }
 
+   componentWillUnmount() {
+      // fix Warning: Can't perform a React state update on an unmounted component
+      this.setState = (state, callback) => {
+         return;
+      };
+   }
+
    render() {
-      const { username, password, error } = this.state
+      const { username, email, password, error } = this.state
       return (
          <div className="container">
             <div className="row">
@@ -63,6 +71,17 @@ class Register extends Component {
                         />
                      </div>
                      <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                           type="text"
+                           className="form-control"
+                           name="email"
+                           placeholder="Enter email"
+                           value={email}
+                           onChange={this.onChange}
+                        />
+                     </div>
+                     <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
                            type="password"
@@ -73,6 +92,7 @@ class Register extends Component {
                            onChange={this.onChange}
                         />
                      </div>
+
                      <button
                         type="submit"
                         className="btn btn-lg btn-primary btn-block">

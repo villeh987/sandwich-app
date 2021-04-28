@@ -3,8 +3,11 @@
 var utils = require('../utils/writer.js');
 var User = require('../service/UserService');
 
-module.exports.createUser = function createUser (req, res, next) {
+module.exports.createUser = function createUser(req, res, next) {
   var body = req.swagger.params['body'].value;
+  console.log("----------------CONTROLLER---------------------");
+  console.log(body);
+  console.log("-----------------CONTROLLER--------------------");
   User.createUser(body)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -14,7 +17,7 @@ module.exports.createUser = function createUser (req, res, next) {
     });
 };
 
-module.exports.deleteUser = function deleteUser (req, res, next) {
+module.exports.deleteUser = function deleteUser(req, res, next) {
   var username = req.swagger.params['username'].value;
   User.deleteUser(username)
     .then(function (response) {
@@ -25,7 +28,7 @@ module.exports.deleteUser = function deleteUser (req, res, next) {
     });
 };
 
-module.exports.getUserByName = function getUserByName (req, res, next) {
+module.exports.getUserByName = function getUserByName(req, res, next) {
   var username = req.swagger.params['username'].value;
   User.getUserByName(username)
     .then(function (response) {
@@ -36,7 +39,7 @@ module.exports.getUserByName = function getUserByName (req, res, next) {
     });
 };
 
-module.exports.loginUser = function loginUser (req, res, next) {
+module.exports.loginUser = function loginUser(req, res, next) {
   var user = req.swagger.params['user'].value;
   User.loginUser(user)
     .then(function (response) {
@@ -47,7 +50,7 @@ module.exports.loginUser = function loginUser (req, res, next) {
     });
 };
 
-module.exports.logoutUser = function logoutUser (req, res, next) {
+module.exports.logoutUser = function logoutUser(req, res, next) {
   User.logoutUser()
     .then(function (response) {
       utils.writeJson(res, response);
@@ -57,10 +60,10 @@ module.exports.logoutUser = function logoutUser (req, res, next) {
     });
 };
 
-module.exports.updateUser = function updateUser (req, res, next) {
+module.exports.updateUser = function updateUser(req, res, next) {
   var username = req.swagger.params['username'].value;
   var body = req.swagger.params['body'].value;
-  User.updateUser(username,body)
+  User.updateUser(username, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

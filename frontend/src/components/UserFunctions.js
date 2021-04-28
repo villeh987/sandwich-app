@@ -3,17 +3,27 @@ import axios from 'axios'
 export const register = newUser => {
    return axios
       //sends the body data to backend
-      .post('users/register', {
-         username: newUser.username,
-         password: newUser.password
+      .post('http://localhost:5000/v1/user', {
+         headers: {
+            'Accept': 'application/json',
+         },
+         data: {
+            "username": newUser.username,
+            "email": "omar@salem.pappaodottaautossa",
+            "password": newUser.password
+         }
       })
+      // ei katota tässä response.data.status === 'Registered!' 
+      // vaan writeJson tekemiä status codeja ja niiden perusteella iffihelvetit
       .then(response => {
          console.log(response);
-         if (response.data.status === 'Registered!') {
+         if (response.status === 200) {
+            console.log("200");
             return 'success';
          } else if (response.data.error === 'User already exists') {
             return 'User already exists'
          } else {
+            console.log("error");
             return 'error'
          }
       })
@@ -21,9 +31,14 @@ export const register = newUser => {
 
 export const login = user => {
    return axios
-      .post('users/login', {
-         username: user.username,
-         password: user.password
+      .post('http://localhost:5000/v1/loginUser', {
+         headers: {
+            'Accept': 'application/json',
+         },
+         data: {
+            "username": user.username,
+            "password": user.password
+         }
       })
       .then(response => {
          console.log(response);
