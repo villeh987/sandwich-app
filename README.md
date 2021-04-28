@@ -55,7 +55,12 @@ Those groups that use other technologies/architecture than described need to app
 **System architecture overview**
 ![System architecture overview](System_architecture.png)
 
-This project features a React frontend. React is a popular Javascript framework and was heavily recommended to be used by the course staff. The client is used by the user to create a sandwich order and ask for sandwich statuses. The client uses Axios, an HTPP client, to communicate with server-a. Server-a implemets a predefined Swagger-API. When the user chooses to create a order from the client, the request is routed to the correct controller via SwaggerRouter. In this case, the Order controller. This controller then creates a new database entry into MongoDB and also adds the order to a RabbitMQ queue. The communication between the server and the RabbitMQ message queue is handled using AMQP application layer protocol. These messages sent by server-a are then subscribed by server-b which then "completes" the order and sending the order back to another queue. Server-a then listens to this queue for ready orders and updates the status to "ready". 
+This project features a React frontend. React is a popular Javascript framework and was heavily recommended to be used by the course staff. The client is used by the user to create a sandwich order and ask for sandwich statuses. The client uses Axios, an HTPP client, to communicate with server-a. 
+
+Server-a implemets a predefined Swagger-API. When the user chooses to create a order from the client, the request is routed to the correct controller via SwaggerRouter. In this case, the Order controller. This controller then creates a new database entry into MongoDB and also adds the order to a RabbitMQ queue. 
+Server-a keeps track of the newest order ID in the Counter collection in MongoDB and every time and a sandwich is ordered, the counter value is increased by 1 and the value is fetched and stored in the order data as the order ID.
+
+The communication between the server and the RabbitMQ message queue is handled using AMQP application layer protocol. These messages sent by server-a are then subscribed by server-b which then "completes" the order and sending the order back to another queue. Server-a then listens to this queue for ready orders and updates the status to "ready". 
 
 Also, the user can view the status for orders from the client.
 

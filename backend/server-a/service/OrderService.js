@@ -1,6 +1,6 @@
 'use strict';
-var OrderModel = require('../models/order');
-
+var Order = require('../models/order');
+var CounterModel = require('../models/counter');
 
 /**
  * Add an order for an sandwich
@@ -8,32 +8,34 @@ var OrderModel = require('../models/order');
  * order Order place an order for a sandwich
  * returns Order
  **/
-
-
 exports.addOrder = function (order) {
   return new Promise(function (resolve, reject) {
-    resolve(order)
-  });
+    // create the query for increasing counter by one and fetching the digit for the ID
+    var query = {},
+      update = { _id: "order", $inc: { counter: 1 } },
+      options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+    // Increases counter variable by 1 in the CounterModel and returns the value and which is the new order id
+    CounterModel.findOneAndUpdate(query, update, options, function (error, result) {
+      if (error) return;
+
+      // set the new ID from the counter
+      const NEW_ORDER_ID = result.counter
+      order.data.id = NEW_ORDER_ID
+
+      // construct object with the order data
+      const orderData = {
+        id: order.data.id,
+        sandwichId: order.data.sandwichId,
+        status: order.data.status,
+      }
+      // Create a order document with the data and put it in the Order collection 
+      Order.create(orderData)
+      resolve(order)
+    });
+  })
 }
 
-
-
-/*exports.addOrder = function(order) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "sandwichId" : 6,
-  "id" : 0,
-  "status" : "ordered"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
- */
 
 /**
  * Find an order by its ID
@@ -44,14 +46,11 @@ exports.addOrder = function (order) {
  **/
 exports.getOrderById = function (orderId) {
   return new Promise(function (resolve, reject) {
-    OrderModel.findOne({
+    var orders = {}
+    // fetches the order from the db with only the necessary fields
+    Order.findOne({
       id: orderId
     }).select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
-      console.log("-----------------------getOrderById------------------------");
-      console.log(JSON.stringify(documents, null, 2));
-      console.log("-----------------------getOrderById------------------------");
-      //return res.end(JSON.stringify(users));
-      var orders = {}
       orders['application/json'] = JSON.stringify(documents)
       if (Object.keys(orders).length > 0) {
         resolve(orders[Object.keys(orders)[0]]);
@@ -70,12 +69,9 @@ exports.getOrderById = function (orderId) {
  **/
 exports.getOrders = function () {
   return new Promise(function (resolve, reject) {
-    OrderModel.find().select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
-      console.log("-----------------------getOrders------------------------");
-      console.log(JSON.stringify(documents, null, 2));
-      console.log("-----------------------getOrders------------------------");
-      //return res.end(JSON.stringify(users));
-      var orders = {}
+    var orders = {}
+    // fetches all the orders from the db with only the necessary fields
+    Order.find().select({ id: 1, sandwichId: 1, status: 1, _id: 0 }).lean().exec(function (err, documents) {
       orders['application/json'] = JSON.stringify(documents)
       if (Object.keys(orders).length > 0) {
         resolve(orders[Object.keys(orders)[0]]);

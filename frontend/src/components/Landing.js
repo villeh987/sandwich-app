@@ -28,6 +28,7 @@ class Landing extends Component {
       } else {
          getOrder(parsedValue)
             .then(res => {
+               // pitäs selvittää saadaaks sielt server-a:sta status koodei pihalle vai mikä homma pitääks nää errorjutut tehä sen contentin perusteella
                if (res.status === 200) {
                   this.setState({ searchResult: JSON.stringify(res.data) })
                   this.setState({ searchStatus: "Order found with the given ID!" });
@@ -46,6 +47,7 @@ class Landing extends Component {
    fetchOrders() {
       getOrders()
          .then(data => {
+            // tähä kans tsekkaukset tuleeks kamaa vai ei
             this.setState({ orders: JSON.stringify(data) })
          })
    }
@@ -72,7 +74,7 @@ class Landing extends Component {
    render() {
       return (
          <div className="cards">
-            <section class="card card--weather">
+            <section class="card card--order">
                <header>
                   <h1 className="text-center">Tilaa poeka leipä</h1>
                </header>
@@ -86,6 +88,11 @@ class Landing extends Component {
                      <p className="statusMessage">{this.state.searchResult}</p>
                   </div>
                </div>
+
+               {/* 
+               <ul>
+                     <li id="line"></li>
+               </ul> */}
                <div className="sandwichOrderContainer">
                   <button className="btn btn-dark" onClick={this.makeOrder}>Order a sandwich</button>
                   <p className="statusMessage">{this.state.newOrderStatus}</p>
@@ -99,7 +106,7 @@ class Landing extends Component {
                   <li></li>
                </ul>
             </section>
-            <section class="card card--egain">
+            <section class="card card--orderList">
                <header>
                   <h1 className="text-center">Leibs</h1>
                </header>

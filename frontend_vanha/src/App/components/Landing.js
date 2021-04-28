@@ -31,7 +31,7 @@ class Landing extends Component {
 
       return (
          <div className="cards" >
-            <section className="card card--weather">
+            <section className="card card--order">
                <header>
                   <h1 className="text-center">Tilaa poeka leippä</h1>
                </header>
@@ -46,7 +46,7 @@ class Landing extends Component {
                   <WeekContainer />
                </div>
             </section>
-            <section className="card card--egain">
+            <section className="card card--orderList">
                <header>
                   <h1 className="text-center">Maiskis</h1>
                </header>

@@ -9,11 +9,11 @@
     /* font-family: sans-serif; */
   }
   
-  .card--weather {
+  .card--order {
     flex: 0 0 1100px;
   
   }
-  .card--egain {
+  .card--orderList {
     flex: 0 0 300px;
   }
   
@@ -27,20 +27,20 @@
   body {
    margin: 0
   }
-  .card--weather{
+  .card--order{
     /* min-height: 40vh; */
     height: 535px;
     width: 0vh;
   }
   
-  .card.card--weather > ul li {
+  .card.card--order > ul li {
     height: 20px;
     width: 90%;
     margin: 10px auto;
     text-align: center;
    }
   
-  .card--egain{
+  .card--orderList{
     /* min-height: 70vh; */
     height: 535px;
    }
