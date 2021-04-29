@@ -99,7 +99,7 @@ class Landing extends Component {
       // Create the search result if there is data for it in state
       var searchResult = "";
       if (this.state.searchResult !== null && this.state.searchResult.id !== undefined) {
-         searchResult = "ID: " + this.state.searchResult.id + " - Status: " + this.state.searchResult.status + " - Sandwich ID: " +  this.state.searchResult.sandwichID;
+         searchResult = "ID: " + this.state.searchResult.id + " - Status: " + this.state.searchResult.status + " - Sandwich ID: " +  this.state.searchResult.sandwichId;
       }
 
       // Create the list of orders it there is data for it in state
