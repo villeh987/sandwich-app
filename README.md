@@ -1,14 +1,5 @@
 # TIE-23526 Web Architectures - Group project work repository
 
- 
-### Required documentation
-````
-OLD
-The documentation required includes the project plan, architectural description of the system, the technologies used, the progress of the group's work, as well as what the group's members learned during this project. Groups also must document where the components of their system are placed in the repository, and how the course personnel can deploy the group's system on their own computers when testing it.
-
-Groups can of course add any extra documentation they feel is useful, and if course personnel finds the documentation useful and well written, this extra documentation will affect the points positively.
-````
-
 ### Project plan
 
 
@@ -49,9 +40,6 @@ During the project we had good communication and held weekly meetings where we w
 
 
 ### Documentation of the created system
-Following describes what needs to be documented during the project.
-
-Those groups that use other technologies/architecture than described need to apply these instructions to fit their choices.
 
 #### System architecture
 
@@ -63,11 +51,9 @@ This project features a React frontend. React is a popular Javascript framework 
 Server-a implemets a predefined Swagger-API. When the user chooses to create a order from the client, the request is routed to the correct controller via SwaggerRouter. In this case, the Order controller. This controller then creates a new database entry into MongoDB and also adds the order to a RabbitMQ queue. 
 Server-a keeps track of the newest order ID in the Counter collection in MongoDB and every time and a sandwich is ordered, the counter value is increased by 1 and the value is fetched and stored in the order data as the order ID.
 
-The communication between the server and the RabbitMQ message queue is handled using AMQP application layer protocol. These messages sent by server-a are then subscribed by server-b which then "completes" the order and sending the order back to another queue. Server-a then listens to this queue for ready orders and updates the status to "ready". 
+The communication between the server and the RabbitMQ message queue is handled using AMQP application layer protocol. These messages sent by server-a are then subscribed by server-b which then "completes" the order and sending the order back to another queue. Server-a then listens to this queue for ready orders and updates the status to "ready". Also, the user can view the status for orders from the client.
 
-Also, the user can view the status for orders from the client.
-
-The entire project is deployed using Docker and specifically docker-compose. Client, server-a, RabbitMQ, MongoDB and server-b  have been defined in docker-compose.yaml as services. 
+The entire project is deployed using Docker and specifically docker-compose. Client, server-a, RabbitMQ, MongoDB and server-b have been defined in docker-compose.prod.yaml as services. 
 
 
 **Project file structure**
@@ -149,15 +135,6 @@ double T and V
 |   |   package.json
 ```
 
-````
-ORIGINAL
-The focus should on applying what has been learned on the course about Web Architectures. Using proper architectural descriptions and UML diagrams would be appropriated, but the groups are welcome to use any reasonable way of describing the system.
-
-Matters to describe include architectural patterns, components, component's roles, communication within the system and with external components, and others group finds important when describing the architecture. Describe the system with enough detail, so that a technical person with no prior knowledge of the system would be able to understand it. Use images and diagrams whenever you are able.
-
-It is important to evaluate the architecture and compare it other possible architectures. Elaborate on the strengths and weaknesses of this architecture when compared to its purpose and tasks as described in the assignment document. Consider other architectures that would have been able to fulfill the system's described purpose and tasks. This part is where your group gets to explore architectures that could have been used to produce a system with the same or at least similar functionality. The sky is the limit here, get creative!`
-
-````
 
 #### Used technologies
 - Node.js: An asynchronous Javascript runtime. Used for server-a and server-b. 
@@ -174,14 +151,11 @@ For the frontend, we decided to go with the recommended option. We all have prev
 For the backend framework, node.js was effectively the only option, as a lot of JavaScript code was already implemented. Other options could have been Deno, which is quite a new arrival. Deno is supposed to be simpler and a more light approach and supports JavaScript and Typescript. It also claims to be secure by default. This would have had a moderate learning curve coming from Node but choosing Node was quite a no-brainer for us.
 
 Storing the order status data was something where we gave thought to many different options. The requirement was that the statuses would not have to be preserved between server resets. We gave a thought to node-persist, which is a localStorage on the server side. However, we still decided to go for an actual database for the purpose that if we were to implement the User and Sandwich models we would definitely need a database. We debated between PostgreSQL and MongoDB and decided to go with the latter due to the JSON-like documents and begin a bit "lighter" in our opinion. 
+Even though we did not declare any volumes for the MongoDB, the mongo image itself declares volumes for /data/db and /data/configdb in containers, which cover database data.
 
 Changing RabbitMQ, AMQP, Swagger and Docker to alternative technologies were not an option. The entire project could be hosted in the cloud of course, but this was not necessary in this project. If one would like to deploy the project for everyone to see, then taking the project to cloud would be the way to go. 
 
 
-````
-ORIGINAL
-Description of the technologies used in the system (Node, RabbitMQ, AMPQ, ...), how the technologies were used in the project, and the group's view of the technologies from your use. Could other/better alternatives have been used? Or is there an alternative that would have been more interesting to the group?
-````
 
 ### How the produced system can be tested
 **NOTE** : This project has been tested using Docker version 20.10 and docker-compose version 1.29.0. Please use Docker this version, or other version that supports multi-stage builds.
@@ -206,14 +180,8 @@ docker-compose -f docker-compose.prod.yml up
 4. Starting the project will take some time. The client will start on port 3001. All ports are visible in the docker-compose.prod.yml file. These ports have to be free in order for the project to work.
 
 ### Learning during the project
-````
-OLD: A group learning diary, here group's members note down the learning during the project. Short descriptions of who, what, and when is sufficient. What could be a link to GitLab Issue, that has more information.
 
-This information is interesting to the course personnel, too. We get to see if the project enabled learning as designed.
-
-````
-
-Tommi M:
+Tommi M: I have created SPA applications before with similar MERN combo, and this was really good way to refresh my memory because I had forgot some little details about creating SPA applications. I also learned a lot of theory about containerization and how the system architecture can be effectively implemented with Docker and Docker-compose. There were a lot of new things that I did not know about the benefits of containerization. The Swagger API documentation gave a new perspective on how the methods, models and other things should be implemented properly when developing the application.
 
 Tommi B: In the start of the project I learned a lot about Docker and Docker Compose, even though I didn't do as much with them as the rest of the group. In the rest of the project I learned a lot about React as I was mainly working with the frontend, but while helping Tommi M with the server A, I learned a lot about Swagger module and Node. I also got to deepen my knowledge about Swagger API documentation and CORS.
 
