@@ -5,7 +5,7 @@
 
 #### Course project group information
 
-Vilhelmi Lehton, vilhelmi.lehtonen@tuni.fi \
+Vilhelmi Lehtonen, vilhelmi.lehtonen@tuni.fi \
 Tommi Mikkola, tommi.mikkola@tuni.fi \
 Tommi Brusila, tommi.brusila@tuni.fi \
 
