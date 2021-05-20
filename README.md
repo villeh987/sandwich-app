@@ -5,11 +5,9 @@
 
 #### Course project group information
 
-Vilhelmi Lehtonen, 268600, vilhelmi.lehtonen@tuni.fi \
-Tommi Mikkola, 266986, tommi.mikkola@tuni.fi \
-Tommi Brusila, 266200, tommi.brusila@tuni.fi \
-Group name: Double T & V \
-Gitlab repo URL: https://course-gitlab.tuni.fi/webarch-2021/double-t-and-v
+Vilhelmi Lehton, vilhelmi.lehtonen@tuni.fi \
+Tommi Mikkola, tommi.mikkola@tuni.fi \
+Tommi Brusila, tommi.brusila@tuni.fi \
 
 #### Working during the project
 Due to all group members having very tight schedules, no strict timetable was created for the project. However, by dividing the project into sensible tasks in Gitlab board, each member was able to work independently and effectively. All of the members work in the software industry so this way of working is exremely familiar to the members. The issues were self-assigned. 
@@ -186,5 +184,3 @@ Tommi M: I have created SPA applications before with similar MERN combo, and thi
 Tommi B: In the start of the project I learned a lot about Docker and Docker Compose, even though I didn't do as much with them as the rest of the group. In the rest of the project I learned a lot about React as I was mainly working with the frontend, but while helping Tommi M with the server A, I learned a lot about Swagger module and Node. I also got to deepen my knowledge about Swagger API documentation and CORS.
 
 Vilhelmi: Working with Docker during this project has significantly imporved my understanding of it and docker-compose. The relationships with the services and Dockerfiles are much cleare than before. I believe that this project has helped me to dockerize future coding projects. RabbitMQ was completely new to me and the group. Investigating that has helped to understand a bit about message brokers and AMQP-protocol. 
-
-
